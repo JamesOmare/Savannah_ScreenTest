@@ -1,13 +1,13 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class CustomerManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name):
-        if first_name is None:
-            raise TypeError('Users should have a first name')
-        if last_name is None:
-            raise TypeError('Users should have a last name')
+    def create_user(self, email, username):
+        if username is None:
+            raise TypeError('Users should have a username')
         if email is None:
             raise TypeError('Users should have an email')
 
@@ -16,8 +16,7 @@ class CustomerManager(BaseUserManager):
 
         user = self.model(
             email=email,
-            first_name=first_name,
-            last_name=last_name
+            username=username,
         )
 
         user.set_unusable_password()
@@ -36,8 +35,7 @@ class CustomerManager(BaseUserManager):
         return user
 
 class Customer(AbstractBaseUser, PermissionsMixin):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     email = models.EmailField(
         unique=True,
         max_length=255,
@@ -46,11 +44,20 @@ class Customer(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
 
     objects = CustomerManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
         return self.email
+    
+    def tokens(self):
+        refresh_token = RefreshToken.for_user(self)
+        return {
+            'refresh': str(refresh_token),
+            'access': str(refresh_token.access_token)
+        }

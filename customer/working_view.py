@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from django.conf import settings
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from rest_framework.views import APIView
@@ -15,6 +16,7 @@ from .models import Customer
     get=extend_schema(
         description='Redirects user to Auth0 for authentication',
         responses={302: None},
+        tags=['Authentication'],
     )
 )
 class OIDCAuthenticateView(APIView):
@@ -37,6 +39,7 @@ class OIDCAuthenticateView(APIView):
             403: dict(type='object', properties={'error': dict(type='string'), 'error_description': dict(type='string')}),
             400: dict(type='object', properties={'error': dict(type='string')}),
         },
+        tags=['Authentication'],
     )
 )
 class OIDCCallbackView(APIView):
@@ -46,6 +49,8 @@ class OIDCCallbackView(APIView):
             return Response({'error': 'access_denied', 'error_description': error_description}, status=status.HTTP_403_FORBIDDEN)
 
         code = request.GET.get('code')
+        logger.info(f"Request data: {request.GET}")
+        logger.info(f"Code: {code}")
         token_url = f"https://{settings.AUTH0_DOMAIN}/oauth/token"
         token_data = {
             "grant_type": "authorization_code",
@@ -54,9 +59,12 @@ class OIDCCallbackView(APIView):
             "code": code,
             "redirect_uri": settings.REDIRECT_URI
         }
+        
+        logger.info(f"Token data: {token_data}")
 
         token_response = requests.post(token_url, data=token_data)
         token_response_data = token_response.json()
+        logger.info(f"Token response data: {token_response_data}")
         id_token = token_response_data.get('id_token')
 
         if not id_token:
@@ -77,18 +85,12 @@ class OIDCCallbackView(APIView):
             decoded_data = jwt.decode(id_token, public_key, audience=settings.AUTH0_CLIENT_ID, issuer=settings.AUTH0_ISSUER, algorithms=['RS256'])
             logger.info(f"Decoded data: {decoded_data}")
             email = decoded_data.get('email')
-            
-            # for google login
-            if decoded_data.get('given_name') and decoded_data.get('family_name'):
-                username = decoded_data.get('name')
-            
-            # for custom App
-            if decoded_data.get('nickname'):
-                username = decoded_data.get('nickname')
-                
             user, created = Customer.objects.get_or_create(
                 email=email,
-                username = username
+                defaults={
+                    'first_name': decoded_data.get('given_name', ''),
+                    'last_name': decoded_data.get('family_name', '')
+                }
             )
 
             if created:

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -99,7 +101,10 @@ REST_FRAMEWORK = {
     #     'rest_framework.authentication.SessionAuthentication',
     #     'rest_framework.authentication.BasicAuthentication',
     # ],
-    # 'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     # 'DEFAULT_PERMISSION_CLASSES': [
     #     'rest_framework.permissions.IsAuthenticated',
     # ],
@@ -113,7 +118,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'A project that measures one\'s income and expenses',
     'VERSION': '1.0.0',
     'TOS': "https://www.google.com/policies/terms/",
-    'CONTACT': {"name": "James Omare", "url": "https://portfolio-beryl-pi-22.vercel.app/", "email": "jamesomare922@gmail.com"},
+    'CONTACT': {"name": "James Omare",  "email": "jamesomare177@gmail.com"},
     'LICENSE': {"name": "Open License"},
     'SERVERS': [{'url': 'http://127.0.0.1:8000/'}],
     'TAGS': [],
@@ -130,6 +135,7 @@ AUTH0_ISSUER = f'https://{AUTH0_DOMAIN}/'
 
 
 # Password validation
+# We won't be using password for login in this application
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -147,6 +153,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes= int(os.getenv('ACCESS_TOKEN_LIFETIME'))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days= int(os.getenv('REFRESH_TOKEN_LIFETIME'))),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": False,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
