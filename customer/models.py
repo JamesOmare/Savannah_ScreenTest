@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
-
+import uuid
 
 class CustomerManager(BaseUserManager):
     def create_user(self, email, username):
@@ -41,6 +41,8 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         db_index=True
     )
+    code = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -54,6 +56,9 @@ class Customer(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def generate_unique_code(self):
+        return uuid.uuid4().hex[:10].upper()
     
     def tokens(self):
         refresh_token = RefreshToken.for_user(self)

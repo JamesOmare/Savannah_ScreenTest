@@ -8,8 +8,10 @@ import requests
 import json
 import jwt
 from jwt.algorithms import RSAAlgorithm
-from .serializers import CustomerSerializer
+from .serializers import CustomerSerializer, PhoneNumberSerializer
 from .models import Customer
+from rest_framework.permissions import IsAuthenticated
+
 
 @extend_schema_view(
     get=extend_schema(
@@ -88,10 +90,12 @@ class OIDCCallbackView(APIView):
                 
             user, created = Customer.objects.get_or_create(
                 email=email,
-                username = username
+                username = username,
+                defaults={'code': Customer.objects.model().generate_unique_code()}
             )
-
+          
             if created:
+                code = user.code
                 user.set_unusable_password()
                 user.save()
 
@@ -100,3 +104,24 @@ class OIDCCallbackView(APIView):
 
         except jwt.exceptions.DecodeError as e:
             return Response({'error': f'Invalid token: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+
+@extend_schema_view(
+    put=extend_schema(
+        description='Update the phone number for the authenticated user',
+        request=PhoneNumberSerializer,
+        responses={
+            200: PhoneNumberSerializer,
+            400: 'Bad Request'
+        },
+    )
+)
+class UpdatePhoneNumberView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        serializer = PhoneNumberSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

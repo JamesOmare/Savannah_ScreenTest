@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from re import A
 from dotenv import load_dotenv
 from datetime import timedelta
 
@@ -126,6 +127,7 @@ SPECTACULAR_SETTINGS = {
     
 }
 
+# Auth0 settings
 AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
 AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID')
 AUTH0_CLIENT_SECRET = os.getenv('AUTH0_CLIENT_SECRET')
@@ -155,7 +157,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes= int(os.getenv('ACCESS_TOKEN_LIFETIME'))),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes= int(os.getenv('ACCESS_TOKEN_LIFETIME'))),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days= int(os.getenv('ACCESS_TOKEN_LIFETIME'))),
     "REFRESH_TOKEN_LIFETIME": timedelta(days= int(os.getenv('REFRESH_TOKEN_LIFETIME'))),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -187,3 +190,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "customer.Customer"
 
+# Africa Is Talking settings
+AFRICAS_TALKING_USERNAME = os.getenv('AFRICAS_TALKING_USERNAME')
+AFRICAS_TALKING_API_KEY = os.getenv('AFRICAS_TALKING_API_KEY')
+AFRICAS_TALKING_SENDER_ID = os.getenv('AFRICAS_TALKING_SENDER_ID')
