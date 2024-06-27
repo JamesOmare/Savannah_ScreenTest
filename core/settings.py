@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from re import A
 from dotenv import load_dotenv
 from datetime import timedelta
 
@@ -130,12 +129,12 @@ SPECTACULAR_SETTINGS = {
     # available SwaggerUI configuration parameters
     # https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
     'TITLE': 'Savannah Screen Test',
-    'DESCRIPTION': 'A project that measures one\'s income and expenses',
+    'DESCRIPTION': 'A project that manages orders for customers',
     'VERSION': '1.0.0',
     'TOS': "https://www.google.com/policies/terms/",
     'CONTACT': {"name": "James Omare",  "email": "jamesomare177@gmail.com"},
     'LICENSE': {"name": "Open License"},
-    'SERVERS': [{'url': 'web-production-c7112.up.railway.app', 'description': 'Production Server'}],
+    # 'SERVERS': [{'url': 'web-production-c7112.up.railway.app', 'description': 'Production Server'}],
     'TAGS': [],
     'SERVE_INCLUDE_SCHEMA': False,
     
