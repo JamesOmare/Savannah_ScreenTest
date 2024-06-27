@@ -6,9 +6,9 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('api/auth/', OIDCAuthenticateView.as_view(), name='oidc_authenticate'),
-    path('api/auth0/callback/', OIDCCallbackView.as_view(), name='oidc_callback'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/update-phone-number/', UpdatePhoneNumberView.as_view(), name='update_phone_number'),
+    path('api/v1/auth/', OIDCAuthenticateView.as_view(), name='oidc_authenticate'),
+    path('api/v1/auth0/callback/', OIDCCallbackView.as_view(), name='oidc_callback'),
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/update-phone-number/', UpdatePhoneNumberView.as_view(), name='update_phone_number'),
 ]
