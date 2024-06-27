@@ -11,9 +11,9 @@ class CustomerSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255, min_length=3)
     username = serializers.CharField(max_length=255, min_length=3, read_only=True)
     
-    # @extend_schema_field(OpenApiTypes.OBJECT)
-    # def get_tokens(self, obj):
-    #     return obj.tokens()
+    @extend_schema_field(OpenApiTypes.OBJECT)
+    def get_tokens(self, obj):
+        return obj.tokens()
     
     class Meta:
         model = Customer

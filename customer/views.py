@@ -77,7 +77,6 @@ class OIDCCallbackView(APIView):
 
         try:
             decoded_data = jwt.decode(id_token, public_key, audience=settings.AUTH0_CLIENT_ID, issuer=settings.AUTH0_ISSUER, algorithms=['RS256'])
-            logger.info(f"Decoded data: {decoded_data}")
             email = decoded_data.get('email')
             
             # for google login
