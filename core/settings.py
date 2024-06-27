@@ -92,7 +92,7 @@ if os.getenv('TEST_CONFIG'):
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'test_db',
-            'USER': 'james',
+            'USER': 'example',
             'PASSWORD': '1234',
             'HOST': 'localhost',
             'PORT': '5432',
