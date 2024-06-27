@@ -3,7 +3,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiPara
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from loguru import logger
+from rest_framework import serializers
 import requests
 import json
 import jwt
@@ -104,6 +104,9 @@ class OIDCCallbackView(APIView):
         except jwt.exceptions.DecodeError as e:
             return Response({'error': f'Invalid token: {e}'}, status=status.HTTP_400_BAD_REQUEST)
 
+class BadRequestSerializer(serializers.Serializer):
+    error = serializers.CharField()
+    
 @extend_schema_view(
     put=extend_schema(
         description='Update the phone number for the authenticated user',

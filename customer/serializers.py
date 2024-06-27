@@ -4,7 +4,6 @@ from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 import phonenumbers
-from loguru import logger
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -12,8 +11,12 @@ class CustomerSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=255, min_length=3, read_only=True)
     
     @extend_schema_field(OpenApiTypes.OBJECT)
-    def get_tokens(self, obj):
+    def get_tokens(self, obj) -> dict:
         return obj.tokens()
+    
+    @extend_schema_field(OpenApiTypes.STR)
+    def tokens(self) -> str:
+        return "some_token_string"
     
     class Meta:
         model = Customer
