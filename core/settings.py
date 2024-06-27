@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['web-production-c7112.up.railway.app']
+ALLOWED_HOSTS = ['web-production-c7112.up.railway.app', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
-    # "whitenoise.runserver_nostatic",
     
     # apps
     "customer",
@@ -119,17 +118,11 @@ else:
     
     
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework.authentication.BasicAuthentication',
-    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
      ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+   
 }
 
 SPECTACULAR_SETTINGS = {
@@ -142,7 +135,7 @@ SPECTACULAR_SETTINGS = {
     'TOS': "https://www.google.com/policies/terms/",
     'CONTACT': {"name": "James Omare",  "email": "jamesomare177@gmail.com"},
     'LICENSE': {"name": "Open License"},
-    'SERVERS': [{'url': 'http://127.0.0.1:8000/'}],
+    'SERVERS': [{'url': 'web-production-c7112.up.railway.app', 'description': 'Production Server'}],
     'TAGS': [],
     'SERVE_INCLUDE_SCHEMA': False,
     
