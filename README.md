@@ -214,7 +214,7 @@ workflows:
       - build-and-test
 ```
 - The project is configured with GitHub for seamless integration. Whenever I push commits to a branch, the project automatically builds and runs tests. If the tests pass and the build is successful, the branch is updated accordingly. For deployment, I use Railway, a powerful deployment SaaS. Railway is set up with Continuous Delivery (CD) and is connected to my GitHub branch. Upon a successful deployment triggered by CircleCI, which handles the initial build and test processes, Railway takes over. It builds the application and, if the build is successful, deploys it to the production environment.
-
+![screenshot](readme_images/circle_ci.png)
 
 # License
 
